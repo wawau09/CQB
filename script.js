@@ -52,27 +52,64 @@
     currentMouseAngle = Math.atan2(dy, dx);
   }
 
+
+
+
   function getPlayerCenter() {
     const rect = player.getBoundingClientRect();
     return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
   }
 
-  // 플레이어 움직임 처리
+  function isCollidingWithObstacles(x, y, width, height) {
+    for (const obs of obstacles) {
+      const rect = obs.getBoundingClientRect();
+  
+      if (
+        x - 25 < rect.right &&
+        x + width - 25 > rect.left &&
+        y < rect.bottom &&
+        y + height > rect.top
+      ) {
+        return true; // 충돌 발생
+      }
+    }
+    return false;
+  }
+  
   function updatePlayerPosition() {
-    if (keys.a) playerX -= playerSpeed;
-    if (keys.d) playerX += playerSpeed;
-    if (keys.w) playerY -= playerSpeed;
-    if (keys.s) playerY += playerSpeed;
-
-    // 경계 제한
-    playerX = Math.max(0, Math.min(window.innerWidth - 40, playerX));
-    playerY = Math.max(0, Math.min(window.innerHeight - 40, playerY));
-
+    const playerWidth = player.offsetWidth;
+    const playerHeight = player.offsetHeight;
+  
+    let newX = playerX;
+    let newY = playerY;
+  
+    // 좌우 먼저 계산
+    if (keys.a) newX -= playerSpeed;
+    if (keys.d) newX += playerSpeed;
+  
+    // 가로 경계 제한 및 충돌 체크
+    newX = Math.max(0, Math.min(window.innerWidth - playerWidth, newX));
+    if (!isCollidingWithObstacles(newX, playerY, playerWidth, playerHeight)) {
+      playerX = newX;
+    }
+  
+    // 상하 계산
+    if (keys.w) newY -= playerSpeed;
+    if (keys.s) newY += playerSpeed;
+  
+    // 세로 경계 제한 및 충돌 체크
+    newY = Math.max(0, Math.min(window.innerHeight - playerHeight, newY));
+    if (!isCollidingWithObstacles(playerX, newY, playerWidth, playerHeight)) {
+      playerY = newY;
+    }
+  
     player.style.left = playerX + "px";
     player.style.top = playerY + "px";
-    // 플레이어 방향 회전 (마우스 방향)
-    player.style.transform = `rotate(${currentMouseAngle}rad)`;
   }
+  
+
+
+
 
   // 총알 발사
   function shootTowardMouse(mouseX, mouseY) {
@@ -94,25 +131,43 @@
   });
 
   function updateBullets() {
-    for(let i = bullets.length-1; i >= 0; i--) {
-      let bullet = bullets[i];
-      let x = parseFloat(bullet.style.left) || 0;
-      let y = parseFloat(bullet.style.top) || 0;
-      let dx = parseFloat(bullet.dataset.dx);
-      let dy = parseFloat(bullet.dataset.dy);
+  bullets.forEach((bullet, i) => {
+    let x = parseFloat(bullet.style.left);
+    let y = parseFloat(bullet.style.top);
+    let dx = parseFloat(bullet.dataset.dx);
+    let dy = parseFloat(bullet.dataset.dy);
 
-      x += dx;
-      y += dy;
+    x += dx;
+    y += dy;
 
-      bullet.style.left = x + "px";
-      bullet.style.top = y + "px";
+    // 벽 충돌 검사
+    const bulletWidth = bullet.offsetWidth;
+    const bulletHeight = bullet.offsetHeight;
 
-      if (x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight) {
-        bullet.remove();
-        bullets.splice(i, 1);
+    let collided = false;
+    for (const obs of obstacles) {
+      const rect = obs.getBoundingClientRect();
+
+      if (
+        x < rect.right &&
+        x + bulletWidth > rect.left &&
+        y < rect.bottom &&
+        y + bulletHeight > rect.top
+      ) {
+        collided = true;
+        break;
       }
     }
-  }
+
+    if (collided || x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight) {
+      bullet.remove();
+      bullets.splice(i, 1);
+    } else {
+      bullet.style.left = x + "px";
+      bullet.style.top = y + "px";
+    }
+  });
+}
 
   function isColliding(a, b) {
     const rect1 = a.getBoundingClientRect();
