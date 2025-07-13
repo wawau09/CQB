@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>슈팅 게임</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game">
+    <div id="player"></div>
+    <div id="score">점수: 0</div>
+
+    <!-- 장애물 예시 -->
+    <div class="obstacle" style="top: 150px; left: 300px; width: 200px; height: 30px;"></div>
+    <div class="obstacle" style="top: 400px; left: 600px; width: 50px; height: 200px;"></div>
+    <div class="obstacle" style="top: 300px; left: 900px; width: 150px; height: 40px;"></div>
+
+    <!-- 적 예시 -->
+    <div class="enemy" style="top: 100px; left: 700px;"></div>
+    <div class="enemy" style="top: 350px; left: 1100px;"></div>
+    <div class="enemy" style="top: 600px; left: 400px;"></div>
+
+    <canvas id="vision-canvas"></canvas>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

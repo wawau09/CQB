@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  color: white;
+  font-family: sans-serif;
+}
+
+#game {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #111;
+}
+
+#player {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  background: lime;
+  display: block;
+}
+
+.bullet {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: yellow;
+}
+
+.enemy {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: red;
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+}
+
+#block {
+  position: absolute;
+  background-color: red;
+  width: 50px;
+  height: 50px;
+}
+
+#vision-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.obstacle {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: gray;
+  z-index: 2;
+}
