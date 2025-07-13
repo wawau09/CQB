@@ -13,7 +13,10 @@
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
-  let obstacles = Array.from(document.getElementsByClassName('obstacle'));
+  let obstacles = [];
+  window.addEventListener("load", () => {
+    obstacles = Array.from(document.getElementsByClassName("obstacle"));
+  });
   let enemies = Array.from(document.getElementsByClassName('enemy'));
 
   let playerX = window.innerWidth / 2;
